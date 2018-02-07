@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
-
-namespace Library.API
+﻿namespace Library.API
 {
     using AutoMapper;
     using Entities;
@@ -8,6 +6,7 @@ namespace Library.API
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.Formatters;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +29,7 @@ namespace Library.API
             {
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
 
             // register the DbContext on the container, getting the connection string from
@@ -63,11 +63,15 @@ namespace Library.API
 
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Author, AuthorViewModel>()
+                cfg.CreateMap<Author, AuthorDTO>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
                     .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
 
-                cfg.CreateMap<Book, BookViewModel>();
+                cfg.CreateMap<CreateAuthorDTO, Author>();
+
+                cfg.CreateMap<Book, BookDTO>();
+
+                cfg.CreateMap<CreateBookDTO, Book>();
             });
 
             libraryContext.EnsureSeedDataForContext();
