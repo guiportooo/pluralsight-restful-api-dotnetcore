@@ -72,6 +72,10 @@
                 cfg.CreateMap<Book, BookDTO>();
 
                 cfg.CreateMap<CreateBookDTO, Book>();
+
+                cfg.CreateMap<UpdateBookDTO, Book>();
+
+                cfg.CreateMap<Book, UpdateBookDTO>();
             });
 
             libraryContext.EnsureSeedDataForContext();
